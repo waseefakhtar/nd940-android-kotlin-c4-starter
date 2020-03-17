@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "551054237118",
+    "firebase_url": "https://udacity-location-finder-b641d.firebaseio.com",
+    "project_id": "udacity-location-finder-b641d",
+    "storage_bucket": "udacity-location-finder-b641d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551054237118:android:d6a55ee8ab4a0e31a82def",
+        "android_client_info": {
+          "package_name": "com.udacity.project4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "551054237118-r5n0mpiiib9ntquuvqck7e30e4sidltp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDz0tzvcgo6bj3ZkT1EFb9TwyKt3aD8yss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "551054237118-r5n0mpiiib9ntquuvqck7e30e4sidltp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
