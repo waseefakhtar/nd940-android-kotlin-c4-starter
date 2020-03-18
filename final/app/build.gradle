@@ -76,6 +76,8 @@ dependencies {
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
+    //Firebase
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
 
     // Dependencies for local unit tests
     testImplementation "junit:junit:$junitVersion"
