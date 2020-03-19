@@ -62,11 +62,6 @@ class AuthenticationActivity : AppCompatActivity() {
             .setEmailButtonId(R.id.email_sign_in_button)
             .build()
 
-        val firebaseApp = FirebaseApp.getInstance()
-        AuthUI.getInstance(firebaseApp).createSignInIntentBuilder()
-            .setAuthMethodPickerLayout(customLayout)
-            .build()
-
         return customLayout
     }
 
