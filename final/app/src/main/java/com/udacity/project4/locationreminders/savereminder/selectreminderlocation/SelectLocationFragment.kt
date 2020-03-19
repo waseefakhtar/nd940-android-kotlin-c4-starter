@@ -1,39 +1,29 @@
 package com.udacity.project4.locationreminders.savereminder.selectreminderlocation
 
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
-import android.content.IntentSender
-import android.content.pm.PackageManager
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
-import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import org.koin.android.ext.android.inject
 
-class SelectLocationFragment : BaseFragment() {
+
+class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     //Use Koin to get the view model of the SaveReminder
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSelectLocationBinding
+    private var mMap: GoogleMap? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -48,6 +38,9 @@ class SelectLocationFragment : BaseFragment() {
         setDisplayHomeAsUpEnabled(true)
 
 //        TODO: add the map setup implementation
+        val mapFragment = childFragmentManager.findFragmentById(R.id.googleMap) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
 //        TODO: zoom to the user location after taking his permission
 //        TODO: add style to the map
 //        TODO: put a marker to location that the user selected
@@ -57,6 +50,16 @@ class SelectLocationFragment : BaseFragment() {
         onLocationSelected()
 
         return binding.root
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        mMap = googleMap
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        // Add a marker in Sydney, Australia, and move the camera.
+        val sydney = LatLng((-34).toDouble(), (151).toDouble())
+        mMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        mMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
     private fun onLocationSelected() {
@@ -86,6 +89,4 @@ class SelectLocationFragment : BaseFragment() {
         }
         else -> super.onOptionsItemSelected(item)
     }
-
-
 }
