@@ -8,4 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CustomTheme" parent="FirebaseUI">
+        <!-- Required for sign-in flow styling -->
+        <item name="colorPrimary">@color/dark_gray</item>
+        <item name="colorPrimaryDark">@color/nero</item>
+        <item name="colorAccent">@color/aqua_marine</item>
+
+        <item name="colorControlNormal">@color/desert_storm</item>
+        <item name="colorControlActivated">@color/nobel</item>
+        <item name="colorControlHighlight">@color/nobel</item>
+        <item name="android:windowBackground">@color/dark_gray</item>
+    </style>
+
 </resources>
