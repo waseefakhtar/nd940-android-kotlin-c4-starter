@@ -4,6 +4,7 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
@@ -28,6 +30,7 @@ import org.koin.android.ext.android.inject
 
 
 private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
+private const val DEFAULT_ZOOM = 10F
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
@@ -36,6 +39,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var binding: FragmentSelectLocationBinding
     private var mMap: GoogleMap? = null
     private var mLocationPermissionGranted: Boolean = false
+    private var mLastKnownLocation: Location? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -101,36 +105,24 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 val mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity as Activity)
                 val locationResult = mFusedLocationProviderClient.lastLocation
 
-                //locationResult.addOnCompleteListener(activity as Activity, object :)
+                locationResult.addOnCompleteListener(activity as Activity) { task ->
+                    if (task.isSuccessful) {
+                        mLastKnownLocation = task.result
 
-
-                /*locationResult.addOnCompleteListener(
-                    this,
-                    object : OnCompleteListener<Any?> {
-                        fun onComplete(task: Task) {
-                            if (task.isSuccessful()) { // Set the map's camera position to the current location of the device.
-                                mLastKnownLocation = task.getResult()
-                                mMap!!.moveCamera(
-                                    CameraUpdateFactory.newLatLngZoom(
-                                        LatLng(
-                                            mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()
-                                        ), DEFAULT_ZOOM
-                                    )
-                                )
-                            } else {
-                                Log.d("SelectLocationFragment", "Current location is null. Using defaults.")
-                                Log.e("SelectLocationFragment", "Exception: %s", task.getException())
-                                mMap!!.moveCamera(
-                                    CameraUpdateFactory.newLatLngZoom(
-                                        mDefaultLocation,
-                                        DEFAULT_ZOOM
-                                    )
-                                )
-                                mMap!!.uiSettings.isMyLocationButtonEnabled = false
-                            }
+                        mLastKnownLocation?.let {
+                            val currentLocation = LatLng(it.latitude, it.longitude)
+                            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
+                            mMap?.addMarker(MarkerOptions().position(currentLocation).title("Current Location"))
                         }
-                    })*/
+                    } else {
+                        Log.d("SelectLocationFragment", "Current location is null. Using defaults.")
+                        Log.e("SelectLocationFragment", "Exception: %s", task.exception)
+
+                        val sydney = LatLng((-34).toDouble(), (151).toDouble())
+                        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, DEFAULT_ZOOM))
+                        mMap?.uiSettings?.isMyLocationButtonEnabled = false
+                    }
+                }
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message)
@@ -166,7 +158,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             } else {
                 mMap!!.isMyLocationEnabled = false
                 mMap!!.uiSettings.isMyLocationButtonEnabled = false
-                //mLastKnownLocation = null
+                mLastKnownLocation = null
                 getLocationPermission()
             }
         } catch (e: SecurityException) {
