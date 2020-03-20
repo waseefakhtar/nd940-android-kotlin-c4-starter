@@ -11,7 +11,6 @@ import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -19,9 +18,8 @@ import com.google.android.gms.maps.GoogleMap.*
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
@@ -73,16 +71,23 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap
 
-        // Add a marker in Sydney, Australia, and move the camera.
-        // Add a marker in Sydney, Australia, and move the camera.
-        /*val sydney = LatLng((-34).toDouble(), (151).toDouble())
-        mMap?.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap?.moveCamera(CameraUpdateFactory.newLatLng(sydney))*/
-
         updateLocationUI()
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
+
+        mMap?.setOnMarkerDragListener(object : OnMarkerDragListener {
+            override fun onMarkerDragStart(marker: Marker) { }
+
+            override fun onMarkerDragEnd(marker: Marker) {
+                Log.i("SelectLocationFragment", String.format("onMarkerDragEnd: %s", marker))
+                val position = marker.position
+                mLastKnownLocation?.latitude = position.latitude
+                mLastKnownLocation?.longitude = position.longitude
+            }
+
+            override fun onMarkerDrag(marker: Marker?) { }
+        })
     }
 
     private fun getLocationPermission() { /*
@@ -113,7 +118,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                         mLastKnownLocation?.let {
                             val currentLocation = LatLng(it.latitude, it.longitude)
                             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
-                            mMap?.addMarker(MarkerOptions().position(currentLocation).title("Current Location"))
+                            mMap?.addMarker(MarkerOptions().position(currentLocation).title("Current Location").draggable(true))
                         }
                     } else {
                         Log.d("SelectLocationFragment", "Current location is null. Using defaults.")
@@ -154,11 +159,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
         try {
             if (mLocationPermissionGranted) {
-                mMap!!.isMyLocationEnabled = true
-                mMap!!.uiSettings.isMyLocationButtonEnabled = true
+                mMap?.isMyLocationEnabled = true
+                mMap?.uiSettings?.isMyLocationButtonEnabled = true
             } else {
-                mMap!!.isMyLocationEnabled = false
-                mMap!!.uiSettings.isMyLocationButtonEnabled = false
+                mMap?.isMyLocationEnabled = false
+                mMap?.uiSettings?.isMyLocationButtonEnabled = false
                 mLastKnownLocation = null
                 getLocationPermission()
             }
