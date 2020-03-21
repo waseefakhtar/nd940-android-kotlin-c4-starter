@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding_small"
             android:layout_marginLeft="@dimen/padding_small"
-            android:text="@{item.title}"
+            android:text="@{reminderDataItem.title}"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_large"
             tools:text="Title" />
@@ -32,7 +32,7 @@
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.description}"
+            android:text="@{reminderDataItem.description}"
             android:textSize="@dimen/text_size_normal"
             tools:text="Description" />
 
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@{item.location}"
+            android:text="@{reminderDataItem.location}"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/text_size_normal"
             tools:text="Location" />
