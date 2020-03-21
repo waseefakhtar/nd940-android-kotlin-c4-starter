@@ -20,11 +20,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
+import kotlinx.android.synthetic.main.fragment_select_location.*
 import org.koin.android.ext.android.inject
 
 
@@ -39,6 +41,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     private var mLocationPermissionGranted: Boolean = false
     private var mLastKnownLocation: Location? = null
+    private var mMarker: Marker? = null
+    private var mPointOfInterest: PointOfInterest? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -63,7 +67,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
 
 //        TODO: call this function after the user confirms on the selected location
-        onLocationSelected()
+        binding.confirmButton.setOnClickListener {
+            onLocationSelected()
+        }
 
         return binding.root
     }
@@ -76,18 +82,17 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
 
-        mMap?.setOnMarkerDragListener(object : OnMarkerDragListener {
-            override fun onMarkerDragStart(marker: Marker) { }
+        mMap?.setOnPoiClickListener { pointOfInterest ->
+            mPointOfInterest = pointOfInterest
+            val currentLocation = pointOfInterest.latLng
+            confirmButton.isEnabled = true
 
-            override fun onMarkerDragEnd(marker: Marker) {
-                Log.i("SelectLocationFragment", String.format("onMarkerDragEnd: %s", marker))
-                val position = marker.position
-                mLastKnownLocation?.latitude = position.latitude
-                mLastKnownLocation?.longitude = position.longitude
+            mMarker?.let {
+                it.position = pointOfInterest.latLng
+            } ?: kotlin.run {
+                mMarker = mMap?.addMarker(MarkerOptions().position(currentLocation).title("Current Location"))
             }
-
-            override fun onMarkerDrag(marker: Marker?) { }
-        })
+        }
     }
 
     private fun getLocationPermission() { /*
@@ -118,7 +123,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                         mLastKnownLocation?.let {
                             val currentLocation = LatLng(it.latitude, it.longitude)
                             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, DEFAULT_ZOOM))
-                            mMap?.addMarker(MarkerOptions().position(currentLocation).title("Current Location").draggable(true))
                         }
                     } else {
                         Log.d("SelectLocationFragment", "Current location is null. Using defaults.")
@@ -178,6 +182,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         //        TODO: When the user confirms on the selected location,
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
+        _viewModel.selectedPOI.value = mPointOfInterest
+        activity?.supportFragmentManager?.popBackStack()
     }
 
 

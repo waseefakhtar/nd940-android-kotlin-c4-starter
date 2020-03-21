@@ -21,5 +21,33 @@
             android:layout_height="match_parent"
             android:name="com.google.android.gms.maps.SupportMapFragment" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:text="Tap a point of interest to add a marker"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <Button
+            android:id="@+id/confirmButton"
+            style="@style/FirebaseUI.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confirm Location"
+            android:layout_marginBottom="24dp"
+            android:enabled="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
