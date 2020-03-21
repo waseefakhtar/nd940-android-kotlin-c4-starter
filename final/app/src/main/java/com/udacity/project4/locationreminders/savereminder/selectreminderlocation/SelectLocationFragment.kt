@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
+import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
@@ -182,8 +183,14 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         //        TODO: When the user confirms on the selected location,
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
-        _viewModel.selectedPOI.value = mPointOfInterest
-        activity?.supportFragmentManager?.popBackStack()
+        mPointOfInterest?.let {
+            _viewModel.selectedPOI.value = it
+            _viewModel.reminderSelectedLocationStr.value = it.name
+            _viewModel.latitude.value = it.latLng.latitude
+            _viewModel.longitude.value = it.latLng.longitude
+            _viewModel.navigationCommand.value = NavigationCommand.Back
+        }
+
     }
 
 
