@@ -37,11 +37,6 @@ class SaveReminderViewModelTest {
     private val dataSource: FakeDataSource = mock(FakeDataSource::class.java)
     private var saveReminderViewModel: SaveReminderViewModel = mock(SaveReminderViewModel::class.java)
 
-    private val job = Job()
-
-    val coroutineContext: CoroutineContext
-        get() = Dispatchers.Unconfined + job
-
     //TODO: provide testing to the SaveReminderView and its live data objects
     @Before
     fun setUp() {
