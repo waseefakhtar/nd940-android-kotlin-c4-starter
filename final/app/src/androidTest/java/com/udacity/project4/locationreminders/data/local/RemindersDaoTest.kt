@@ -59,12 +59,28 @@ class RemindersDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun deleteRemindersAndGetAll() {
+    fun saveDeleteRemindersAndGetAll() {
         val reminderDTO: ReminderDTO = TestUtil.createReminderDTO(TestUtil.createReminderDataItem())
         runBlocking { remindersDao.saveReminder(reminderDTO) }
 
         runBlocking { remindersDao.deleteAllReminders() }
 
+        val savedReminders = runBlocking { remindersDao.getReminders() }
+        assertThat(savedReminders, `is`(emptyList()))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun deleteRemindersAndGetAll() {
+        runBlocking { remindersDao.deleteAllReminders() }
+
+        val savedReminders = runBlocking { remindersDao.getReminders() }
+        assertThat(savedReminders, `is`(emptyList()))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getReminders() {
         val savedReminders = runBlocking { remindersDao.getReminders() }
         assertThat(savedReminders, `is`(emptyList()))
     }
