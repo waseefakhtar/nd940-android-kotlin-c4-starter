@@ -10,14 +10,16 @@ import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.runBlocking
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Suspendable
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
@@ -36,6 +38,7 @@ class SaveReminderViewModelTest {
     private val app: Application = mock(Application::class.java)
     private val dataSource: FakeDataSource = mock(FakeDataSource::class.java)
     private var saveReminderViewModel: SaveReminderViewModel = mock(SaveReminderViewModel::class.java)
+
 
     //TODO: provide testing to the SaveReminderView and its live data objects
     @Before
@@ -62,20 +65,20 @@ class SaveReminderViewModelTest {
 
     @Test
     fun validateAndSaveReminder() {
-        val reminderDataItem: ReminderDataItem = createReminderDataItem()
+            val reminderDataItem: ReminderDataItem = createReminderDataItem()
 
-        saveReminderViewModel.saveReminder(reminderDataItem)
+            saveReminderViewModel.validateAndSaveReminder(reminderDataItem)
 
-        assertEquals(saveReminderViewModel.showLoading.value, false)
-        assertEquals(saveReminderViewModel.showToast.value, app.getString(R.string.reminder_saved))
-        assertEquals(saveReminderViewModel.navigationCommand.value, NavigationCommand.Back)
+            assertEquals(saveReminderViewModel.showLoading.value, false)
+            assertEquals(saveReminderViewModel.showToast.value, app.getString(R.string.reminder_saved))
+            assertEquals(saveReminderViewModel.navigationCommand.value, NavigationCommand.Back)
     }
 
     @Test
     fun saveReminder() {
         val reminderDataItem: ReminderDataItem = createReminderDataItem()
 
-        saveReminderViewModel.validateAndSaveReminder(reminderDataItem)
+        saveReminderViewModel.saveReminder(reminderDataItem)
 
 
         assertEquals(saveReminderViewModel.showLoading.value, false)
