@@ -168,36 +168,6 @@ var mActivityTestRule = ActivityTestRule(RemindersActivity::class.java)
             )
         )
         appCompatButton.perform(ViewActions.click())
-
-        /*val floatingActionButton2 = Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.saveReminder),
-                childAtPosition(
-                    childAtPosition(
-                        ViewMatchers.withId(R.id.nav_host_fragment),
-                        0
-                    ),
-                    3
-                ),
-                ViewMatchers.isDisplayed()
-            )
-        )
-        floatingActionButton2.perform(ViewActions.click(ViewActions.pressBack()))*/
-
-        /*val actionMenuItemView = Espresso.onView(
-            Matchers.allOf(
-                ViewMatchers.withId(R.id.logout), ViewMatchers.withText("Logout"),
-                childAtPosition(
-                    childAtPosition(
-                        ViewMatchers.withId(R.id.action_bar),
-                        1
-                    ),
-                    0
-                ),
-                ViewMatchers.isDisplayed()
-            )
-        )
-        actionMenuItemView.perform(ViewActions.click())*/
     }
 
     private fun childAtPosition(

@@ -1,9 +1,7 @@
 package com.udacity.project4.locationreminders.savereminder
 
 import android.app.Application
-import android.location.Location
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.common.base.Verify
 import com.udacity.project4.R
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.FakeDataSource
@@ -11,25 +9,14 @@ import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.*
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Suspendable
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito
 import org.mockito.Mockito.*
-import org.mockito.stubbing.OngoingStubbing
 import java.util.concurrent.ThreadLocalRandom
-import javax.sql.DataSource
-import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -171,20 +158,3 @@ fun randomString(size: Int = 20): String = (0..size)
 private val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
 val random
     get() = ThreadLocalRandom.current()
-
-
-interface SuspendableMock {
-    suspend fun suspendFunctionMock()
-}
-
-class SuspendableImpl(val dataSource: FakeDataSource, val reminderDTO: ReminderDTO) : SuspendableMock {
-    override suspend fun suspendFunctionMock() = dataSource.saveReminder(reminderDTO)
-}
-
-class CallsSuspendable(val suspendableMock: SuspendableMock) {
-    fun callSuspendable() {
-        runBlocking {
-            suspendableMock.suspendFunctionMock()
-        }
-    }
-}

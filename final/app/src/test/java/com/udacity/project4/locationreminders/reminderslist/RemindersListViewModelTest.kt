@@ -3,7 +3,6 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.app.Application
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.data.FakeDataSource
-import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
