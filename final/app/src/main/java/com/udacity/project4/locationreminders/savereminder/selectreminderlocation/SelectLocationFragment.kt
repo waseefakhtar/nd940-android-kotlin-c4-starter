@@ -81,7 +81,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         updateLocationUI()
 
         // Get the current location of the device and set the position of the map.
-        getDeviceLocation()
+        updateMapPosition()
 
         mMap?.setOnPoiClickListener { pointOfInterest ->
             mPointOfInterest = pointOfInterest
@@ -108,7 +108,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
     }
 
-    private fun getDeviceLocation() { /*
+    private fun updateMapPosition() { /*
      * Get the best and most recent location of the device, which may be null in rare
      * cases when a location is not available.
      */
