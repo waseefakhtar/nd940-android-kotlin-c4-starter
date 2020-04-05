@@ -4,6 +4,7 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -29,6 +30,7 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import kotlinx.android.synthetic.main.fragment_select_location.*
 import org.koin.android.ext.android.inject
+import java.util.*
 
 
 private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 10
@@ -44,6 +46,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private var mLastKnownLocation: Location? = null
     private var mMarker: Marker? = null
     private var mPointOfInterest: PointOfInterest? = null
+    private var mLatLng: LatLng? = null
 
     private val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 
@@ -94,6 +97,17 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 it.position = pointOfInterest.latLng
             } ?: kotlin.run {
                 mMarker = mMap?.addMarker(MarkerOptions().position(currentLocation).title("Current Location"))
+            }
+        }
+
+        mMap?.setOnMapLongClickListener { latLng ->
+            mLatLng = latLng
+            confirmButton.isEnabled = true
+
+            mMarker?.let {
+                it.position = latLng
+            } ?: kotlin.run {
+                mMarker = mMap?.addMarker(MarkerOptions().position(latLng).title("Current Location"))
             }
         }
     }
@@ -192,6 +206,21 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             _viewModel.latitude.value = it.latLng.latitude
             _viewModel.longitude.value = it.latLng.longitude
             _viewModel.navigationCommand.value = NavigationCommand.Back
+        } ?: kotlin.run {
+            mLatLng?.let {
+
+                val geocoder = Geocoder(context, Locale.getDefault())
+                val locationList = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+
+                if (locationList != null && locationList.size > 0) {
+                    val address = locationList[0]
+                    _viewModel.reminderSelectedLocationStr.value = address.featureName
+                }
+
+                _viewModel.latitude.value = it.latitude
+                _viewModel.longitude.value = it.longitude
+                _viewModel.navigationCommand.value = NavigationCommand.Back
+            }
         }
 
     }
