@@ -28,4 +28,8 @@ class ReminderListFragmentTest {
 //    TODO: test the navigation of the fragments.
 //    TODO: test the displayed data on the UI.
 //    TODO: add testing for the error messages.
+    @Test
+    fun remindersListFragmentTest() {
+
+    }
 }
