@@ -18,10 +18,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.*
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PointOfInterest
+import com.google.android.gms.maps.model.*
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -82,6 +79,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap?) {
         mMap = googleMap
+        mMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.map_style))
+
 
         updateLocationUI()
 
@@ -96,7 +95,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             mMarker?.let {
                 it.position = pointOfInterest.latLng
             } ?: kotlin.run {
-                mMarker = mMap?.addMarker(MarkerOptions().position(currentLocation).title("Current Location"))
+                mMarker = mMap?.addMarker(
+                    MarkerOptions()
+                        .position(currentLocation)
+                        .title("Current Location")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
             }
         }
 
@@ -107,7 +110,11 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             mMarker?.let {
                 it.position = latLng
             } ?: kotlin.run {
-                mMarker = mMap?.addMarker(MarkerOptions().position(latLng).title("Current Location"))
+                mMarker = mMap?.addMarker(
+                    MarkerOptions()
+                        .position(latLng)
+                        .title("Current Location")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
             }
         }
     }
