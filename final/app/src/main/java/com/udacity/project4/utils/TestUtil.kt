@@ -1,8 +1,12 @@
-package com.udacity.project4.util
+package com.udacity.project4.utils
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.ThreadLocalRandom
+import java.util.concurrent.TimeUnit
 
 class TestUtil {
 
@@ -32,8 +36,12 @@ class TestUtil {
                 reminderDataItem.longitude,
                 reminderDataItem.id)
 
-        fun positiveRandomInt(maxInt: Int = Int.MAX_VALUE-1): Int = random.nextInt(maxInt+1).takeIf { it > 0 } ?: positiveRandomInt(maxInt)
-        fun positiveRandomLong(maxLong: Long = Long.MAX_VALUE-1): Long = random.nextLong(maxLong+1).takeIf { it > 0 } ?: positiveRandomLong(maxLong)
+        fun positiveRandomInt(maxInt: Int = Int.MAX_VALUE-1): Int = random.nextInt(maxInt+1).takeIf { it > 0 } ?: positiveRandomInt(
+            maxInt
+        )
+        fun positiveRandomLong(maxLong: Long = Long.MAX_VALUE-1): Long = random.nextLong(maxLong+1).takeIf { it > 0 } ?: positiveRandomLong(
+            maxLong
+        )
         fun positiveRandomDouble(maxDouble: Double = Double.MAX_VALUE-1): Double = random.nextDouble(maxDouble + 1).takeIf { it > 0 } ?: positiveRandomDouble(
             maxDouble
         )
@@ -49,4 +57,19 @@ class TestUtil {
         val random
             get() = ThreadLocalRandom.current()
     }
+}
+
+fun <T> LiveData<T>.blockingObserveValue(): T? {
+    var value: T? = null
+    val latch = CountDownLatch(1)
+
+    val observer = Observer<T> { t ->
+        value = t
+        latch.countDown()
+    }
+
+    observeForever(observer)
+
+    latch.await(2, TimeUnit.SECONDS)
+    return value
 }

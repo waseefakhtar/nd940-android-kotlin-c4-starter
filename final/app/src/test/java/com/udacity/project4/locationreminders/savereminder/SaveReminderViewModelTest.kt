@@ -5,8 +5,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.R
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.FakeDataSource
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import com.udacity.project4.utils.TestUtil.Companion.createReminderDataItem
+import com.udacity.project4.utils.TestUtil.Companion.randomString
+import com.udacity.project4.utils.blockingObserveValue
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.*
 
@@ -42,12 +44,12 @@ class SaveReminderViewModelTest {
     fun onClear() {
         saveReminderViewModel.onClear()
 
-        assertEquals(saveReminderViewModel.reminderTitle.value, null)
-        assertEquals(saveReminderViewModel.reminderDescription.value, null)
-        assertEquals(saveReminderViewModel.reminderSelectedLocationStr.value, null)
-        assertEquals(saveReminderViewModel.selectedPOI.value, null)
-        assertEquals(saveReminderViewModel.latitude.value, null)
-        assertEquals(saveReminderViewModel.longitude.value, null)
+        assertEquals(saveReminderViewModel.reminderTitle.blockingObserveValue(), null)
+        assertEquals(saveReminderViewModel.reminderDescription.blockingObserveValue(), null)
+        assertEquals(saveReminderViewModel.reminderSelectedLocationStr.blockingObserveValue(), null)
+        assertEquals(saveReminderViewModel.selectedPOI.blockingObserveValue(), null)
+        assertEquals(saveReminderViewModel.latitude.blockingObserveValue(), null)
+        assertEquals(saveReminderViewModel.longitude.blockingObserveValue(), null)
     }
 
     @Test
@@ -56,9 +58,9 @@ class SaveReminderViewModelTest {
 
             saveReminderViewModel.validateAndSaveReminder(reminderDataItem)
 
-            assertEquals(saveReminderViewModel.showLoading.value, false)
-            assertEquals(saveReminderViewModel.showToast.value, app.getString(R.string.reminder_saved))
-            assertEquals(saveReminderViewModel.navigationCommand.value, NavigationCommand.Back)
+            assertEquals(saveReminderViewModel.showLoading.blockingObserveValue(), false)
+            assertEquals(saveReminderViewModel.showToast.blockingObserveValue(), app.getString(R.string.reminder_saved))
+            assertEquals(saveReminderViewModel.navigationCommand.blockingObserveValue(), NavigationCommand.Back)
     }
 
     @Test
@@ -68,9 +70,9 @@ class SaveReminderViewModelTest {
         saveReminderViewModel.saveReminder(reminderDataItem)
 
 
-        assertEquals(saveReminderViewModel.showLoading.value, false)
-        assertEquals(saveReminderViewModel.showToast.value, app.getString(R.string.reminder_saved))
-        assertEquals(saveReminderViewModel.navigationCommand.value, NavigationCommand.Back)
+        assertEquals(saveReminderViewModel.showLoading.blockingObserveValue(), false)
+        assertEquals(saveReminderViewModel.showToast.blockingObserveValue(), app.getString(R.string.reminder_saved))
+        assertEquals(saveReminderViewModel.navigationCommand.blockingObserveValue(), NavigationCommand.Back)
     }
 
 
@@ -80,7 +82,7 @@ class SaveReminderViewModelTest {
 
         saveReminderViewModel.validateEnteredData(reminderDataItem)
 
-        assertEquals(saveReminderViewModel.showSnackBarInt.value, null)
+        assertEquals(saveReminderViewModel.showSnackBarInt.blockingObserveValue(), null)
     }
 
     @Test
@@ -89,7 +91,7 @@ class SaveReminderViewModelTest {
 
         saveReminderViewModel.validateEnteredData(reminderDataItem)
 
-        assertEquals(saveReminderViewModel.showSnackBarInt.value, R.string.err_enter_title)
+        assertEquals(saveReminderViewModel.showSnackBarInt.blockingObserveValue(), R.string.err_enter_title)
     }
 
     @Test
@@ -98,7 +100,7 @@ class SaveReminderViewModelTest {
 
         saveReminderViewModel.validateEnteredData(reminderDataItem)
 
-        assertEquals(saveReminderViewModel.showSnackBarInt.value, R.string.err_enter_title)
+        assertEquals(saveReminderViewModel.showSnackBarInt.blockingObserveValue(), R.string.err_enter_title)
     }
 
     @Test
@@ -107,7 +109,7 @@ class SaveReminderViewModelTest {
 
         saveReminderViewModel.validateEnteredData(reminderDataItem)
 
-        assertEquals(saveReminderViewModel.showSnackBarInt.value, R.string.err_select_location)
+        assertEquals(saveReminderViewModel.showSnackBarInt.blockingObserveValue(), R.string.err_select_location)
     }
 
     @Test
@@ -116,45 +118,6 @@ class SaveReminderViewModelTest {
 
         saveReminderViewModel.validateEnteredData(reminderDataItem)
 
-        assertEquals(saveReminderViewModel.showSnackBarInt.value, R.string.err_select_location)
+        assertEquals(saveReminderViewModel.showSnackBarInt.blockingObserveValue(), R.string.err_select_location)
     }
 }
-
-fun createReminderDataItem(
-    title: String? = randomString(),
-    description: String? = randomString(),
-    location: String? = randomString(),
-    latitude: Double? = positiveRandomDouble(),
-    longitude: Double?  = positiveRandomDouble(),
-    id: String = randomString()) =
-    ReminderDataItem(
-        title,
-        description,
-        location,
-        latitude,
-        longitude,
-        id)
-
-fun createReminderDTO(reminderDataItem: ReminderDataItem) =
-    ReminderDTO(
-        reminderDataItem.title,
-        reminderDataItem.description,
-        reminderDataItem.location,
-        reminderDataItem.latitude,
-        reminderDataItem.longitude,
-        reminderDataItem.id)
-
-fun positiveRandomInt(maxInt: Int = Int.MAX_VALUE-1): Int = random.nextInt(maxInt+1).takeIf { it > 0 } ?: positiveRandomInt(maxInt)
-fun positiveRandomLong(maxLong: Long = Long.MAX_VALUE-1): Long = random.nextLong(maxLong+1).takeIf { it > 0 } ?: positiveRandomLong(maxLong)
-fun positiveRandomDouble(maxDouble: Double = Double.MAX_VALUE-1): Double = random.nextDouble(maxDouble + 1).takeIf { it > 0 } ?: positiveRandomDouble(maxDouble)
-fun randomInt() = random.nextInt()
-fun randomIntBetween(min: Int, max: Int) = random.nextInt(max - min) + min
-fun randomLong() = random.nextLong()
-fun randomBoolean() = random.nextBoolean()
-fun randomString(size: Int = 20): String = (0..size)
-    .map { charPool[random.nextInt(0, charPool.size)] }
-    .joinToString()
-
-private val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
-val random
-    get() = ThreadLocalRandom.current()

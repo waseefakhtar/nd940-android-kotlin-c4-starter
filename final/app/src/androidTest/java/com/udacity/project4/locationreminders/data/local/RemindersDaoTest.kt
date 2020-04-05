@@ -1,21 +1,18 @@
 package com.udacity.project4.locationreminders.data.local
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.SmallTest;
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
-import com.udacity.project4.util.TestUtil
+import com.udacity.project4.utils.TestUtil
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi;
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
@@ -49,7 +46,8 @@ class RemindersDaoTest {
     @Test
     @Throws(Exception::class)
     fun saveReminderAndGetById() {
-        val reminderDTO: ReminderDTO = TestUtil.createReminderDTO(TestUtil.createReminderDataItem())
+        val reminderDTO: ReminderDTO = TestUtil.createReminderDTO(
+            TestUtil.createReminderDataItem())
 
         runBlocking { remindersDao.saveReminder(reminderDTO) }
 
@@ -60,7 +58,8 @@ class RemindersDaoTest {
     @Test
     @Throws(Exception::class)
     fun saveDeleteRemindersAndGetAll() {
-        val reminderDTO: ReminderDTO = TestUtil.createReminderDTO(TestUtil.createReminderDataItem())
+        val reminderDTO: ReminderDTO = TestUtil.createReminderDTO(
+            TestUtil.createReminderDataItem())
         runBlocking { remindersDao.saveReminder(reminderDTO) }
 
         runBlocking { remindersDao.deleteAllReminders() }

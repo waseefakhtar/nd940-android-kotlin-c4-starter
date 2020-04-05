@@ -3,6 +3,7 @@ package com.udacity.project4.locationreminders.reminderslist
 import android.app.Application
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.locationreminders.data.FakeDataSource
+import com.udacity.project4.utils.blockingObserveValue
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
@@ -35,7 +36,7 @@ class RemindersListViewModelTest {
     fun `Should load reminders`() {
         remindersListViewModel.loadReminders()
 
-        assertEquals(remindersListViewModel.showLoading.value, false)
-        assertEquals(remindersListViewModel.showNoData.value, remindersListViewModel.remindersList.value == null || remindersListViewModel.remindersList.value!!.isEmpty())
+        assertEquals(remindersListViewModel.showLoading.blockingObserveValue(), false)
+        assertEquals(remindersListViewModel.showNoData.blockingObserveValue(), remindersListViewModel.remindersList.blockingObserveValue() == null || remindersListViewModel.remindersList.blockingObserveValue()!!.isEmpty())
     }
 }
