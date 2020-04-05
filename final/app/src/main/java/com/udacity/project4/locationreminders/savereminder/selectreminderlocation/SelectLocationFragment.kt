@@ -125,7 +125,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
      * onRequestPermissionsResult.
      */
         if (ContextCompat.checkSelfPermission(context !!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            && ContextCompat.checkSelfPermission(context !!, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            || ContextCompat.checkSelfPermission(context !!, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true
         } else {
             ActivityCompat.requestPermissions(activity !!, permissions, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
